@@ -1,142 +1,179 @@
-Jenkins #2 session:
+===================
+Jenkins #3 Session:
+===================
 
 
-http methods:
-
--get: if request wants to get some data {read only,dont do any changes in data}
-post: used when you ant to save new data {sign up for example to create a new user}
--put: to update a data already exist
--delete: to delete a data
-
-http status code:
-- 2xx: request is completed successfully
-- 3xx: means redirection {you send a request to a server then this server take your request and then redirect it to another server}
-- 4xx: pop up when there is an error {404 for example means you requesed for a file/path that dont exist}
-- 5xx: pop up when there is an error in server side
+-> If you want to create more than one pipline from different branches in a github repo then
+use {multibranch pipline}, its config is same as pipline but after you give it the Github repo
+URL, it will automatically iterate over all other branches and then create a piplene
+for each branch that has a {Jenkinsfile} in it {this is just the difference}
+- This will be more efficient if you have a lot of pipelines you want to create
 
 
+*********************
+Git-Flow Architecture
+*********************
+
+    Feature  Develop  Release  Testing   Production   Master   Hotfix
+    Branch   Branch   Branch   Branch      Branch     Branch   Branch
 
 
-Jenkins #3 session:
-
-
-
-- if you want to create more than one pipline from different branches in a github repo then use multibranch pipline
-its config is same as pipline but after you give it the repos url , it will automatically iterate over all other branches and then create a piplene for each branch that has
-a Jenkinsfile in it {this is the difference}
-
-
-git-flow architetcher
-
-feature devemop release testing production  master   hotfix
-Branch  Branch   Branch Branch      Branch  Branch   Branch
-
-
-
-master & node architecther -> insted of deploying jenkins server on one master node, make jenkins
+***************************
+Master & Node Architecture
+***************************
+--> Insted of deploying all piplines & jenkins server on one master node, make jenkins
 dashboard only runs on master node and other piplines are sun on separated servers
 
-create two slave node , one on AWS and other in docker container of ubuntu image
 
----------------------------------------------------
-steps for AWS: open our AWS account and then creta EC2 instance for ubuntu {default configurtation}
----------------------------------------------------
+What We Will Do ??
+-> create two slave nodes, one on 1) AWS and other in 2) Docker Container
+of ubuntu image {Where I can build pipelines on}
 
-- after downloading key pair from AWS take a copy from it and then change permission to 400
-$ p ~/Downloads/key_pair_name.pem new_path
+---------------
+1) STEPS for AWS:
+---------------
+- Open your AWS account and then create EC2 instance for ubuntu {Default configurtation}
+
+- After downloading key pair from AWS take a copy from it and then change permission to 400
+$ cp ~/Downloads/key_pair_name.pem  <new_path>
 $ chmod 400 key_pair_name.pem
--then copy instancs public IPv4 address and ssh it
+
+- Then copy instance public IPv4 address and SSH it
 $ ssh -i key_pair_name.pem ubuntu@IPv4_Address
--> username :name of EC2 instance image {ubuntu 20 in this case}
-- to make any server a slave for jenkins i need to install first open-jdk and to have SSh {Private key} then create a dir to make a jenkins send files to it, all of this is in slave server{ubuntu AWS after ssh it}
-$ sudo apt update
-$ sudo apt-get install openjdk-8-jdk     {run it inside ubuntu instance}
+-> ubuntu : username of EC2 instance image {ubuntu 20 in this case}
 
-- go to jenkins dashboard > manage nodes and clouds > new node > then name it and enable {permenant agent} option then hit okay button
-in remote root directory choose oath in wich jenmins will save files in it {in this case its /home/ubuntu/jenkins} jenkins here is a dir created when we were inside ubuntu instance after SSH it
-then give it a lable {aws in this example}
+- To make any server a slave for jenkins i need to install first open-jdk and to have
+SSH {Private key} then create a Dir. in which Jenkins server can save pipelines in it {workspace Dir. that containes pipelines} ,
+all of this will be done in slave server {ubuntu AWS instance after SSH it}
+$ apt update
+$ apt-get install openjdk-8-jdk     {run it inside ubuntu instance}
+$ mkdir Jenkins
+
+- Go to {jenkins dashboard} > {manage nodes and clouds} > {new node} > then name it and
+enable {permenant agent} option then hit okay button
+
+- In {remote root directory} choose path in wich Jenkins will save files in it
+{in this case its /home/ubuntu/Jenkins} -> Jenkins here is a Dir. created when we were inside
+ubuntu instance after SSH it, then give it a label {AWS in this example}
 in luanch method choose {luanch agent via SSH}
-Host -> copy of AWS EC2 instance public IPv4 address
-Credential -> first in credential menu add SSH {just press Add button} , its type is {SSH name with private key} username -> ubuntu , ID -> any name {ssh in this case} , private key {choose enter directly} -> key is stored in key_pair_name.pem which has benn downloaded from AWS , tahke whole text copy and but it in textbox
-Host key verification strategy -> Non verifiying verification strategy then hit go
 
-after node is built go to new items and then create a pipeline in   pipeline script choose gihub + maven but change {agent any} in groovy code to
-agent {label "aws"} // aws is name{label} of node
-but to build this example go to {global tool configration} menu and add Maven [M3]
+Host -> copy AWS EC2 instance public IPv4 Address
 
-- advantage of this is that if created pipline drop down server , EC2 will be droped down not jenkins server
+Credential -> add SSH credential data {just press Add button}, its type is {SSH name with private key}
+username -> ubuntu
+ID -> any name {SSH-AWS-Slave in this case}
+private key {choose enter directly} -> key is stored in key_pair_name.pem which has been
+downloaded from AWS website, take WHOLE text copy and but it in input
+
+Host key verification strategy -> Non verifiying verification strategy
+Then hit go
+
+- After node is built go to {new items} and then create a pipeline, in pipeline script
+choose {gihub + maven} but change {agent any} in groovy code to :
+agent {label "SSH-AWS-Slave"} // aws is name{label} of node
+
+But to build this example go to {global tool configration} menu and add Maven named [M3] as in pipeline script
+
+- Advantage of Slave node is that if created pipline drop down server, EC2 will be droped down not jenkins server
 
 
 
----------------------------------------------------
---> configure a docker container to be a slave for jenkins server
---------------------------------------------------
-$ docker run - it ubuntu bash
+-----------------------------------------------------------------
+2) Configure a docker container to be slave for jenkins server
+-----------------------------------------------------------------
 
-- SAME STEPS : to make any server a slave for jenkins i need to install first open-jdk and to have SSh {Private key} then create a dir to make a jenkins send files to it, all of this is in slave server{ubuntu AWS after ssh it}
+- Run a contrainer from ubuntu image
+$ docker run -it ubuntu bash
+
+- SAME STEPS as 1) AWS: to make any server a slave for jenkins i need to install first
+open-jdk and to have SSh {Private key} then create a dir to make a jenkins send files to it,
+all of this is in slave server{ubuntu AWS after ssh it}
 $ sudo apt update
 $ sudo apt-get install openjdk-8-jdk     {run it inside ubuntu container}
 
-- as this is a docker container , ssh is not installed in it
+- Create a Dir. in which Jenkins server can save pipelines in it {workspace Dir. that containes pipelines}
+$ mkdir Jenkins
+
+- As this is a docker container, SSH is not installed on it
 $ service ssh status
 -> O/P ssh : unrecognized service
+
 so install it first
 $ apt install openssh-server
--after isntalling it enable ssh service
+
+- After installing it enable SSH service
 $ service ssh start
 
--to generate a key pair for SSH   {public key {kalon bta3 elserver ely hn3mloh access} & private key {mofta7}}
+- To generate a key pair for SSH {public key {kalon bta3 elserver ely hn3mloh access} & private key {mofta7}}
 $ ssh-keygen
 $ cd ~/.ssh
-$ls
-O/P  -> id_rsa   id_rsa.pub         pub -> public
+$ ls
+O/P  -> id_rsa   id_rsa.pub        .pub -> public
 
--take private key {mofta7 for jenkins} and copy it to use it in jenkins Credential menu
+- Take private key {mofta7 for jenkins} and copy it to use it in jenkins Credential menu
 $ cat id_rsa
-- copy public key in {authorized_keys} file in ~/.ssh
+
+- Copy public key and then create a file called {authorized_keys} in [~/.ssh]
 $ apt install vim
 $ cat id_rsa.pub
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDZhAHQByxFivAFZGH6Whyybh3kFoD6Ek3G8ymWj2nQNc2+w/ZvzvohvZ8aHGoFghvTGU/GO0GIHbfHYfb/uAkI9bipiLvWIXGZjQS6I8bqbLrjLt3Kso+RgHhrYa3du+KR4FQoF3zaGKOR82QC1lXsAYaHXzanvNAdl/M5brcYQOkgfDItBkinvPcmPmXcF+eilHNmOZOok3SvjZoCXbxMYX2gvAhuEeFrvkrFYgfZ8xiEHj1xgIzISZPQlNKCKnsa2m8+faBdlvaGYtV6Lwra3OkamUkVRLrS+uldM8W94xvs2S4zw7RwjktozGP0ojn2C0w8KIyKlqU4u4Pdns1PDcizpZZRED9xydMlLOvMv7v4C0qDycn1d0lAGLH/tiUjiUJlBwfGEvL/eIi5V9GftwW0Xq4RAoDxZLNOD8zwVNfWTRXlPlrq8i0o0l031UTed5yafE5J2W2Yv1Jq/+tMAi0sNIs+87z9j5SbirSSliFTd4SaXFulHjEb/zE0k= root@f0dcb60c5c10
 but withou (root@f0dcb60c5c10)
 $ vi authorized_keys
 paste public key in it then enter :wq!
-- while private key add it in credential in jenkins
-- in jenkins go to manage credential menu select {SSH username with private key} give it an id -> container-slave-ssh
+
+- In jenkins go to manage {credential menu} select {SSH username with private key} give it
+an id -> container-slave-SSH
 username -> root {must be same user we have written command in terminal with}
-private key > from id_rsa {inside ubuntu container}
+private key -> from id_rsa file {inside ubuntu container}
 
--create a dir inside ubuntu container to make jenkins server save project data in it
-$ mkdir newDir
 
-- then add new node name it {docker} and give it a directory {/root/newDir} , label -> docker
+- Then add new node name it {docker} and give it a directory {/root/Jenkins}
+label -> docker
 in luanch method choose {luanch agent via SSH}
 Host -> ubuntu docker container ID
-$ docker ps    then take container ID of container {this command iside terminal not inside ubuntu container root}
-then run $ docker inspect <Container_ID> , in network section copy IPAddress
-Credential -> written on LINE 103 , just select its username from list shown {username -> root}
-Host key verification strategy -> Non verifiying verification strategy then hit go
+
+$ docker ps
+-> Then take container ID of ubuntu container {this command inside terminal not inside ubuntu container root}
+then run
+$ docker inspect <Container_ID>
+-> In network section copy IPAddress
+Credential -> add SSH credential data {just press Add button}, its type is {SSH name with private key}
+username -> root
+ID -> any name {SSH-Docker-Ubuntu-Slave in this case}
+private key {choose enter directly} -> written on LINE 113
+- Then just select its username from list shown {username -> root}
+
+Host key verification strategy -> Non verifiying verification strategy
+then hit go
 
 
-after node is built go to new items and then create a pipeline in   pipeline script choose gihub + maven but change {agent any} in groovy code to
-agent {label "docker"} // aws is name{label} of noded
-but to build this example go to {global tool configration} menu and add Maven [M3]
-note: install git inside ubuntu container as git command is used in groovy script to prevent happening of an error
+- After node is built go to new items and then create a pipeline,
+in pipeline script choose {gihub + maven} but change {agent any} in groovy code to :
+agent {label "docker"} // docker is name{label} of node
+
+but to build this pipeline go to {global tool configration} menu and add Maven named [M3]
+
+NOTE: install Git inside ubuntu container as git command is used in groovy script to prevent happening of an error
 
 
-task: create an ubuntu slave docker container
-but this time from dockerfile to automate everything {in dockerfile make dir / install openjdk / install ssh /generate keys / add public key to
-authorized_keys etc...}
-+ installing a docker cli in it {add statement of dockerfile that install docker client on container from prevous session}
-so Jenkinsfile can run docker command inside ubuntu container
-dont forget to add ---> agent {label "Slave_Name"} in jenkinsfile
+---------------------------------------------
+TASK: create an ubuntu slave docker container
+---------------------------------------------
+but this time from dockerfile to automate everything {in dockerfile make new Dir./
+install openjdk / install ssh /generate keys / add public key to authorized_keys etc...}
++ installing a docker CLI in it {add statements of dockerfile that install docker
+client on container from previous session}
+so Jenkinsfile can run docker commands inside ubuntu container
+dont forget to Edit ---> agent {label "Slave_Name"} in Jenkinsfile
 
 
-so to have a dockerfile then build it to create an image  then just take its IPaddress of it and put it in nodes config in jenkins server {other steps are all automated}
+-> So this is to have a dockerfile then build it to create an image then just take
+its IPaddress of it and put it in nodes config in jenkins server {other steps are all automated}
 
 
 
-create a script to :
-1- copy file that containes private key from docker container to my host to use it in jenkins
+-> Then create a script to :
+1) Copy file that containes private key from docker container to my host to use it in jenkins
 $ docker cp <containerId>:/file/path/within/container /host/path/target
 //2- to copy ipaddress of continer
 //$ docker ps
@@ -151,37 +188,37 @@ this is meaning of {Host key verification strategy -> Non verifiying verificatio
 (as i enterd yes for that messege)
 
 
-To Be Continued Extensions (Easy) --------------------------
+To Be Continue Extensions (Easy) Part 2 --------------------------------------------------
 
 ----------------------------------------------------
-Integration between jenkins and notification tools {slack}
+Integration between Jenkins and notification tools {slack}
 ----------------------------------------------------
--to make piplelines post their status periodically
+- To make piplelines post their status periodically
 
-go to mange jenkins > plugin manager > then add {slack notification} plugin
+- Go to {mange Jenkins} > {plugin manager} > then add {slack notification} plugin
 
-go to slack.com , login then create a workspace inside workspace create
-a channel press on channel name choose {settings & administration > manage apps}
-in {description includes} search for {jenkins CI} then enter it then press
-{add to slack} then choose channel you want jenkins to connect with
+- Go to slack.com or app installed on Windows, login then create a workspace inside workspace
+create a channel, press on channel name choose {settings & administration > manage apps}
+in {description includes} search for {Jenkins CI} then enter it then press
+{add to slack} then choose channel you want Jenkins to connect with {channel #test in this example}
 
-Then go to jenkins server > manage jenkins > configure system > then go to slack section
-for workspace add {team subdomain} from slack website
-for crediential -> press add choose {secret text} then in {secret} input paste
+- Then go to {Jenkins server} > {manage Jenkins} > {configure system} > then go to slack section
+-> For workspace add {team subdomain} from slack website
+-> For crediential -> press add button choose {secret text} then in {secret} input paste
 from slack website copy token from {Integration Token Credential ID}
 ID -> any name {slack in this example}
-then press add to add credential
+then press add button to add credential
 Default channe/member id -> add channel name
 then press {Test Connection} to make sure its connected sucessfully
 then save
 
--Then how to use it?
+- How to use it now?
 
 1) for freesytle:
-    - in post build actions -> slack notifications
+    -> in {post-build actions} -> slack notifications
 
 2) for pipeline:
-    - in config script for descriptive script
+    -> in config script for descriptive script
         CODE:
         post{
           success{
@@ -198,22 +235,25 @@ then save
 -------------------------------
 auditing pluign -> who did what
 -------------------------------
-go to mange jenkins > plugin manager > then add {audit log} plugin
 
-- aduit logs menu will appears in jenkins server dashboard , press it then press on aduit.html
+- Go to mange jenkins > plugin manager > then add {audit log} plugin
+
+- {Aduit logs} menu will appears in jenkins server dashboard , press it then press on aduit.html
 
 
--------------
+-----------------------------------
 Github Actions : See 47:25 in Video
 No Need To write anything
----------------
+-----------------------------------
+
+- Some advanced topics in jenkis -> shared libraries {not included in internship}
 
 
-some advanced topics in jenkis -> shared libraries {not included in internship}
-
-Thats it
 
 
+========
+Project:
+========
 
 for Booster_CI_CD_Project -> create a multibranch pipeline that have two branches dev/mastr each pipeline form them
     will have different port (change jenkinsfile $ docker run -p porting for each branch)
