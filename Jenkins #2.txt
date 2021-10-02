@@ -1,4 +1,21 @@
-	
+===================
+Jenkins #2 session:
+==================
+
+*************
+http methods:
+*************
+
+-get: if request wants to get some data {read only,dont do any changes in data}
+post: used when you ant to save new data {sign up for example to create a new user}
+-put: to update a data already exist
+-delete: to delete a data
+
+http status code:
+- 2xx: request is completed successfully
+- 3xx: means redirection {you send a request to a server then this server take your request and then redirect it to another server}
+- 4xx: pop up when there is an error {404 for example means you requesed for a file/path that dont exist}
+- 5xx: pop up when there is an error in server side
 
 -Create a container of jenkins image {TO install jenkins}
 $ docker run -d -p 50:8080 jenkins/jenkins:lts
