@@ -136,11 +136,91 @@ so to have a dockerfile then build it to create an image  then just take its IPa
 
 
 create a script to :
-1- copy file that containes private key from docker container to my host to use it in jenkins   
+1- copy file that containes private key from docker container to my host to use it in jenkins
 $ docker cp <containerId>:/file/path/within/container /host/path/target
 //2- to copy ipaddress of continer
-//$ docker ps   
-//$ docker inspect <Container_ID> 
+//$ docker ps
+//$ docker inspect <Container_ID>
+
+
+
+When you ssh a server $ ssh -i sprint.pem ubuntu@IPAddress then a messeage will pop up in terminal then you typed yes
+there is a file created in ~/.ssh called known_hosts thet contains all server you have connected to , which means that you have trusted this server
+next time you ssh on this server no message will be shown
+this is meaning of {Host key verification strategy -> Non verifiying verification strategy } option
+(as i enterd yes for that messege)
 
 
 To Be Continued Extensions (Easy) --------------------------
+
+----------------------------------------------------
+Integration between jenkins and notification tools {slack}
+----------------------------------------------------
+-to make piplelines post their status periodically
+
+go to mange jenkins > plugin manager > then add {slack notification} plugin
+
+go to slack.com , login then create a workspace inside workspace create
+a channel press on channel name choose {settings & administration > manage apps}
+in {description includes} search for {jenkins CI} then enter it then press
+{add to slack} then choose channel you want jenkins to connect with
+
+Then go to jenkins server > manage jenkins > configure system > then go to slack section
+for workspace add {team subdomain} from slack website
+for crediential -> press add choose {secret text} then in {secret} input paste
+from slack website copy token from {Integration Token Credential ID}
+ID -> any name {slack in this example}
+then press add to add credential
+Default channe/member id -> add channel name
+then press {Test Connection} to make sure its connected sucessfully
+then save
+
+-Then how to use it?
+
+1) for freesytle:
+    - in post build actions -> slack notifications
+
+2) for pipeline:
+    - in config script for descriptive script
+        CODE:
+        post{
+          success{
+            slackSend(color:"#00ffcc",message: "pipeline succeeded")//Green
+            }
+            // failure not for syntax errors in scrip , its as for example $ docker command in pipeline that dont installed in it docker CLI
+            failure{
+            slackSend(color:"#cc3300",message: "pipeline failed")//Red
+            }
+        }
+
+
+
+-------------------------------
+auditing pluign -> who did what
+-------------------------------
+go to mange jenkins > plugin manager > then add {audit log} plugin
+
+- aduit logs menu will appears in jenkins server dashboard , press it then press on aduit.html
+
+
+-------------
+Github Actions : See 47:25 in Video
+No Need To write anything
+---------------
+
+
+some advanced topics in jenkis -> shared libraries {not included in internship}
+
+Thats it
+
+
+
+for Booster_CI_CD_Project -> create a multibranch pipeline that have two branches dev/mastr each pipeline form them
+    will have different port (change jenkinsfile $ docker run -p porting for each branch)
+
+
+    how to present project -> in a PDF file put link of repo in your github account
+                            screenshow of successfully pipelines created
+                            screenshots of statistics plugins
+                            screenshot of slack notification when pipelines are build
+                            screenshot of working Django website
