@@ -1,3 +1,4 @@
+# Dockerfile that create a modified ubuntu image that contains Docker Client CLI 
 FROM ubuntu
 USER root
 RUN apt-get update -qq
