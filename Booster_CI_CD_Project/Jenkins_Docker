@@ -1,3 +1,4 @@
+# Dockerfile with jenkins image that modifiy it to have Docker client CLI  
 FROM jenkins/jenkins:lts
 USER root
 #install docker client
