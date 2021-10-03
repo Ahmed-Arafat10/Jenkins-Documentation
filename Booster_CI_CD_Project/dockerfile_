@@ -1,0 +1,24 @@
+# Task inline 160 in Jenkins#3 file , this is the dockerfile {Hardest step ever hhhhh}
+FROM ubuntu
+USER root
+RUN apt-get update -qq
+RUN apt-get install -y apt-utils
+RUN apt install -y apt-transport-https ca-certificates curl software-properties-common
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu `lsb_release -cs` test"
+RUN apt update
+RUN apt-get install docker-ce -y
+#----
+RUN apt-get update 
+RUN apt-get install openjdk-8-jdk -y
+WORKDIR /root
+RUN mkdir Jenkins
+WORKDIR /root/Jenkins
+RUN pwd > Path  
+RUN apt install openssh-server -y
+# RUN service ssh status
+WORKDIR /root/.ssh
+CMD  cd /root/.ssh && service ssh start && yes | ssh-keygen &&  mv y id_rsa && mv y.pub id_rsa.pub && cat /root/.ssh/id_rsa.pub > authorized_keys
+WORKDIR /
+RUN apt-get install git -y  
+RUN ls /root/.ssh
