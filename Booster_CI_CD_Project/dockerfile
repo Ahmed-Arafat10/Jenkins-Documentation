@@ -1,3 +1,4 @@
+# Dockerfile that is used for slave Jenkins
 FROM jenkins/jenkins:lts
 USER root
 #install docker client
