@@ -1,4 +1,4 @@
-# Task inline 160 in Jenkins#3 file , this is the dockerfile {Hardest step ever hhhhh}
+# Task inline 160 in Jenkins#3 file , this is the dockerfile
 FROM ubuntu
 USER root
 RUN apt-get update -qq
