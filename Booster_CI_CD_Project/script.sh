@@ -2,4 +2,4 @@
 // then copy file that containes IPAddress of container slave {will be used for host option while creating new node}
 #! bin/bash
 docker cp $1:/root/.ssh/id_rsa /home/arafat/Desktop/jenkinsproject/PrivateKey
-docker inspect $1 > IPAddress
+docker inspect $1 | grep -i  ipaddress > IPAddress
