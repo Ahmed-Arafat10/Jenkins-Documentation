@@ -1,178 +1,247 @@
 ===================
-Jenkins #2 session:
+Jenkins #2 Session:
 ==================
 
 *************
-http methods:
+HTTP methods:
 *************
 
--get: if request wants to get some data {read only,dont do any changes in data}
-post: used when you ant to save new data {sign up for example to create a new user}
--put: to update a data already exist
--delete: to delete a data
+-> GET: If the request wants to get some data {read only, dont do any changes in data}
+-> POST: Used when you want to save new data {sign up for example to create a new user}
+-> PUT: To update a data that already exist
+-> DELETE: To delete a data in server
 
-http status code:
-- 2xx: request is completed successfully
-- 3xx: means redirection {you send a request to a server then this server take your request and then redirect it to another server}
-- 4xx: pop up when there is an error {404 for example means you requesed for a file/path that dont exist}
-- 5xx: pop up when there is an error in server side
+- Http status code:
+-> 2xx: The request is completed successfully
+-> 3xx: Means redirection {you send a request to a server then this server take your request and
+        then redirect it to another server}
+-> 4xx: Pop up when there is an error {404 for example means you requesed for a file/path that does not exist}
+-> 5xx: Pop up when there is an error in server side
 
--Create a container of jenkins image {TO install jenkins}
+
+------------------------------
+
+- Create a container of Jenkins image {To run Jenkins Server on a Docker Container}
 $ docker run -d -p 50:8080 jenkins/jenkins:lts
 -> -d: run in Background
--> you shouds use [-p] port to map to jenkins as its port{8080} is inside continer
-port 8080 is standard for all jenkins
+-> you should use [-p] flag {means port} to map to Jenkins Server as its port is [8080] (which is
+the port inside continer)
+Note : port [8080] is by default applied to all Jenkins Server
 
 
 - list running containers
 $ docker ps
 
 
--to enter inside a container
+- to enter inside a container
 $ docker exec -it <ContainerID> bash
 
 
 - to show password of intial jenkins dashboard
 $ cat /var/jenkins_home/secrets/initialAdminPassword
--> this is done inside jenkins container so run $ exec command first
+-> this is done inside jenkins container so run [$ exec] command first
+
+
 
 =====================
 -In {configure system menu}
 -> # of executors : No. of piplines that are running at same time
 -> label : name master node {to be more descriptive}
+    Note: This is the node in which Jenkins Dashboard is running on by default {We will talk about slave node in next session}
 -> usage : use default option
--> quite period = 5:after pressing build button pipeline will be waiting for 5 secondes in queue before exceuting it
--> SCM checkout retry count : pipeline pull code from your github using git if it fails it will try n times again and then will give you an error
--> jenkins url : we dont have a domain so we will use default option {local host}
+-> quite period = 5: After pressing build button pipeline will be waiting for 5 secondes in queue before exceuting it
+-> SCM checkout retry count : Pipeline pull code from your github using git, if it fails it will try [n] times again and
+then will give you an error
+-> jenkins url : We dont have a domain so we will use default option {local host}
 =====================
 
--In {manage plugins menu}
--> install {Role-based Authorization Strategy}
-after restart of jenkins go to Configure Global Security > Athorization
- enable {Role-Based Strategy}
+- In {manage plugins menu}
+-> Install {Role-based Authorization Strategy}
+-> After restart of jenkins go to Configure Global Security > Athorization
+-> Enable {Role-Based Strategy}
 
 
-- to restart jenkins manually
- in url --> localhost:port/restart
+- To restart Jenkins manually
+ in url type --> localhost:port/restart
 
 
 
- - In security > manage users  > create new user : to create a user but note this user is considerd to
- be admin, to give each user a specific permission or to create a group install plugin {Role-based Authorization Strategy} from plugin menu (as above)
+- In security > manage users  > create new user : to create a user but NOTE this user is considerd to
+be an admin, to give each user a specific permission or to create a group install plugin called
+{Role-based Authorization Strategy} from plugin menu (as above)
 
- -In {manage and assign roles} menu , go to manage roles and then in {role to add} enter name of roll and then add it then choose role you want
+-In {manage and assign roles} menu, go to manage roles and then in {role to add} enter name of roll
+and then add it then choose role you want
         -> item role: to make a specific user acces a specific pipeline
         -> node role: to make a specific user acces a specific node
-then in {assign roles} add username in {user/group to add} and choose its group
+-> Then in {assign roles} add username in {user/group to add} and choose the group you want to add him in
 
 
 
- - In {manage credinteals > under stores scoped -> jenkins > jenkins > under system -> global credential (unrestricted)} you can add your github/dockerhub/ssh that will be used for upcoming piplines
- this data can be written in scripts fo piplines but this is wrong as your usernameand password will be public as this files are uploaded in github
- rather use this optin in jenkins as it hides your password , you can only change password but cannot show it so even if anyone gets access to jenkins
- dashborad can see or steal your passwords
-github/dockerhub -> select user with password then enter username and password then give it an ID {a name that will be shown inside pipline as an option}
-Note: github password is persnoal access token
-ssh ->
+- In {manage credinteals > under stores scoped -> jenkins > jenkins > under system -> global credential (unrestricted)}
+you can add your GitHub/Dockerhub/SSH/Slack that will be used for upcoming piplines
+-> This data can be written in scripts in piplines configuration menu but this is wrong as your
+username and password will be public as this type of files are uploaded in github, so team can access them
+rather use this optin in Jenkins as it hides your password, you can only change password but cannot show it so
+even if anyone access to Jenkins Dashboard, he can not see or steal your passwords
+GitHub/Dockerhub -> select user with password then enter username and password then give it an ID {a name that will
+be shown inside piplines configuration menu as an option}
+Note: github password is persnoal access token {Generate it in Deloper option in your GitHub Account settings}
+
+
+SSH -> It provides password or public-key based authentication and encrypts connections between two network endpoints.
+In addition to providing strong encryption, SSH is widely used by network administrators to manage systems and applications remotely,
+deliver software patches, or execute commands and move files.
 
 
 
 
-- tools and action > script console : you can add a groovy script and run it ON SERVER Itself not in pipleline {to change something in server for example}
-but you can enter inside jenkins container (exec) to make desired changes ex add folder {best and most comman practice}
+- tools and action > script console : you can add a groovy script and run it ON SERVER Itself not on a pipleline {to change something in server for example}
+OR you can enter inside jenkins container ($ docker exec command) to make desired changes ex: add folder {best and most comman practice}
 
-- tools and action >  prepare for shutdown : to shutdown server of jenkins safely
+- tools and action >  prepare for shutdown : to shutdown server of Jenkins Server safely
 
-- any thing you save or any pipeline you add is stored in /var/jenkins_home/ {inside jenkins container ($exec to enter it)}
+- Any thing you save or any pipeline you add is stored in /var/jenkins_home/ {this path is inside Jenkins Docker Container}
 
 
 
 
 -------------------------------------------------------------------
 
-in {new item} you can choose jobs as
-1- freestyle
-2- pipline
-3- multibranch pipline
+-> In {new item menu} you can choose jobs as :
+1) freestyle
+2) pipline
+3) multibranch pipline
 
 
 
-1- freestyle :
+1) freestyle :
 
-general:
--> discard old builds : each run in jenkins has a build number #1,#2,#3 , if you want jenkins to keep them allocate_shared
-leave this optean unchecked, else then will remove it to not effect disk of server {speed and storage}
-- days to keep builds :
-- max # of builds to keep :
+---------------
+~ General Menu:
+---------------
+
+-> discard old builds : Each run in jenkins has a build number #1,#2,#3, if you want jenkins
+to keep them all leave this option unchecked, else this will remove it to not affect disk of
+server {speed and storage}
+
+-> days to keep builds :
+-> max # of builds to keep :
 -> this project is parametrized {he use choice parameter}
-when this option is used it will help you to build pipeline with diff parameter, so you can use them with if condition in pipeline code
-if paramter is dev do build on server with id X , if paramter is z do v and so on
-->throttle builds : control time between each build so if you choose 1 minitues means if you are going to build 5 times time
-beteen onw build and next one is 1 munite and rest of them are in queue
--> disable this project : a project that has its configration but you cannot run it
--> execute concurrent builds if necessary : two make two builds run at same time {reverse of throttle builds }
+when this option is used it will help you to build pipeline with diff parameter, so you can
+use them with if condition in pipeline code, for example if paramter is [dev] do build on server,
+if ID is [X] do THIS, if paramter is [Y] do Z and so on
 
-source code managaemnt VIP :
-use git to link github with pipline {make it CI/CD}
-add repo URL and choose yout github account credential if repo is private
+-> throttle builds : Control time between each build so if you choose 1 minute means if you are going
+to build 5 times, time between one build and next one is 1 munite and rest of them are in queue
 
-build trigger: defualt without checking on any option project starts manually {build button}
--> triger builds remotely : build project using scripts then enter token of another application so it can communicat with jenkins and send triger mesasge
--> build after other projects are built : this project will be built after building of another project{or pipeline} , enter name of another pipeline
--> build periodically : similer as cronjob in lunix , execute some commands every minit , hour , specific day
--> github hook trigger : choose event (push,pull,any action) which when happens in repo , github wil build the pipline in jenkins configure webhooks in githubs repo {your jenkins must have url or public ID  use jenkins in ec2 with public ID to use this option (in next session we will use ec2)}
-- create a normal user {with name and password} , then in github in payload url ebter https://username@url  and enter in secert input password
--> poll SCM : same as {build periodically} but it dont build automaticly, it will first check github repo if there is any change it will build pipeline else it wont do anything
+-> disable this project : A project that has its configration but you cannot deploy it
 
-Build enviroment:
--> delete workspace before build start : as each pipeline will pull codes from github repo and add it in /var/jenkins_home/workspace, this option will format workspace folder
-before any build {if in first build you made a Dir. , without this option if you created another build it will give you an error as dir is alread exit so use this option to format folder}
--> abort build if its stuck : if building of pipline exeeded a specific time stop build
--> add time stamps to the console output (enable it) : show time for each command in console output
+-> execute concurrent builds if necessary : To make two builds run at same time {reverse of throttle builds}
 
-build:
+------------------------------
+~ Source Code Managaemnt {VIP} :
+------------------------------
+
+-> Use git to link Githubs repo with your pipline {make it CI/CD}
+
+-> Add repo URL and choose your github account {Use credential if repo is private}
+
+----------------
+~ Build Trigger: Default without checking on any of its options means that the project will start manually {build button}
+----------------
+
+-> triger builds remotely : Build project using scripts then enter token of another application, so it can communicat with
+Jenkins and send triger message
+
+-> build after other projects are built : This project will be built after building of another
+project{pipeline}, enter name of another pipeline
+
+-> build periodically : similer as cronjob in lunix, execute some commands every minute, hour or specific day
+
+-> github hook trigger : choose event (push,pull,any action) which when happens in repo, github will build the pipline
+in Jenkins configure webhooks in githubs repo {your Jenkins must have URL or public ID use
+Jenkins in AWS EC2 with public ID to use this option (in next session we will use AWS EC2)}
+- create a normal user {with name and password}, then in github in payload URL enter https://username@url  and enter in secret field the password
+
+-> poll SCM : same as {build periodically} but it dont build automaticly, it will first check
+github repo if there is any change it will build pipeline else it wont do anything
+
+------------------
+~ Build Enviroment:
+------------------
+
+-> delete workspace before build start : As each pipeline will pull codes from github repo and
+add it in /var/jenkins_home/workspace, this option will format workspace folder before any
+build {if in first build you made a Directory, without this option if you created another
+build it will give you an error as Directory is already exist, so use this option to format folder}
+
+-> abort build if its stuck : If building of pipline exeeded a specific time stop build
+
+-> add time stamps to the console output {Enable It} : Show time for each command in console output
+
+---> build:
 choose {execute shell} as we use linux then enter your linux command
 "ls
 mkdir test
 cd test
 touch file1"
 
-post-build actions: actions that will happen after build is done {wether failed of successful}
--build another project
--send message to slack
--commit changes to github
--delete workspace when build is done
+-------------------
+~post-build actions: actions will happen after build is done {whether failed of succeeded}
+-------------------
+-> Build another project
+-> Send message to slack
+-> Commit changes to github
+-> Delete workspace when build is done
 
 then hit save button
 
 
 
--workspace menu in side yours freestyle: its folders in jenkins server {mkdir and pulling from github will all be shown}
-using teminal to enter jenkins server you will find same files and dir
-so each project{pipline} will have its own folder inside /var/jenkins_home/workspace
+-> {Workspace} menu inside your freestyle: It will shows files/folders of your freestyle in
+Jenkins Server {mkdir and pulling from github will all be shown}
+Note: using teminal to enter Jenkins Server you will find same files/folders
+so each project{freesyle in this example pipeline} will have its own folder inside /var/jenkins_home/workspace
 
 
 
 
-2- pipline
+2) Pipline :
 
-general:
-->dont allow the pipline to resume if controller restarts : is server is down dont start pipeline again
-->pipeline speed/durability override : of your intrested more in data if there is any problem in server or in perfromance and dont care about data
-use default option
 
-pipeline: 1) pipeline script OR  2) pipeline scrit from SCM
-1) pipeline script : to write scripte in config menu using groovy langauge {instead of options that exist for beginners in freestyle}
-2) pipeline scrit from SCM : pull script from github using git
--> why use it, if server is destroyed this means that all config of pipelines are all deleted , you will have to write it again as its saved in jenkins server
-this is so bad + this is code so its developed and improved over the time so we cant see hestory of its develoment + we want to take power of
-source management tool (git) ,so script will be in github repo just pull it default name is {jenkinsfile}
+----------------
+~ General Menu : Same as inFreestyles with some differneces
+----------------
 
-two methos for groovy language
-1) scriptive pipline
+-> Dont allow the pipeline to resume if controller restarts : If server is down dont start pipeline again
 
-syntax:
-node > stage 1/m
+-> Pipeline speed/durability override : There is a trade off betwwen speed and durability,
+if you care more about speed this means that Jenkins Server will not save your files periodecilly
+so, if serever crashed or down then they will be gone, this is to make Jenkins Server faster
+But if you care more about durability, this means that the Server will backup your files periodically
+so, if the server is crashed they will be saved but this of course will affect the speed of the server
+{Use default option}
+
+---------
+pipeline Menu {VIP}:
+---------
+1) Pipeline script : To write a scripte in configuration menu using groovy langauge {instead of options that exist for beginners in freestyle HAHAHA}
+2) Pipeline scrit from SCM : Pull script from github using git
+-> why use it, if server is destroyed this means that all configuration of pipelines are all
+deleted, you will have to write it again as its saved in jenkins server
+this is so bad + this is a code,so its developed and improved over the time so we can not see
+a history of its develoment + we want to exploit the power of source management tool {Git}
+so script will be in github repo just pull it, default name is {jenkinsfile}
+
+
+-> two method of writing code for groovy language :
+
+1)Scriptive Pipline :
+
+Syntax:     node > stage {1 OR Many}
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 node {
     stage('Preparation') { // for display purposes
         // Get some code from a GitHub repository
@@ -197,14 +266,18 @@ node {
         archiveArtifacts 'target/*.jar'
     }
 }
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 
 
 
 
+2)Declarative Pipline {Well known more in market}
 
-2) declarative pipline {wellknown more in market}
-syntax:
-pipeline > stages > stage 1/m > steps
+Syntax: pipeline > stages > stage 1/m > steps
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 pipeline {
     stages{
         stage('STAGE #1')
@@ -228,7 +301,11 @@ pipeline {
         }
     }
 }
-//execute some statments {no need for git repo}
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+
+//Example 1: Execute some statements {no need for git repo}
 pipeline {
 
     //used for nodes/slaves
@@ -242,8 +319,9 @@ pipeline {
         }
     }
 }
-=============================================
-// enable maven first in {global tool configration} then give it name of "M3"
+
+
+//Example 2: Enable maven first in {global tool configuration} then give it name of "M3"
 pipeline {
     agent any
 
@@ -287,79 +365,104 @@ pipeline {
         }
     }
 }
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+- Project finished Status : Success - Unstable - Failure
+
+-> Unstable: Means some bugs after unit testing
+-> Failed: Synax error for example: create a Dir. which already exists
 
 
---------------------------------------------------------
+==========
+Exercise :
+==========
+-> I have a {dockerfile} that build a nodejs image, I have to create a CI/CD to run
+commands that build that image using Docker
+-> Push output image to dockerhub
+-> Deploy it locally in Jenkins Server
 
-project finished : success - unstable - failure
-
-unstable: means some bugs after unit testing
-failed: synax error for example / create a dir which alread exists
-
-
-
-Exercise : i have a docker file that build nodejs app , i have to create a CI to run
-commands that build app using docker then push output image to dockerhub then deploy it locally in jenkins server
-dockerfile -> image -> dockercontainer
+Remember : dockerfile -> image -> Docker Container
                |
       push it to dockerhub
 
 
+========
+Answer :
+========
 
-
-jenkinsfile:
+In Jenkinsfile:
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 pipeline {
     agent any
     stages {
         stage('CI') {
             steps {
-                // first make sure that you have created dockerhub account credential in credential menu
+                // first make sure that you have created a Docker Hub Account credential in credential menu
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-
                 sh """
-                //build dockerfile to create an image of it
+                //Build dockerfile to create a Nodejs image of it
                 docker build . -f dockerfile -t ahmedarafat10/jenkins_nodejs:latest
-                //login into dockerhub account
+                //Login into your Docker Hub Accoun
                 docker login -u ${USERNAME}  -p ${PASSWORD}
-                //push created image in dockerhub account
+                //Push created image into your Docker Hub Accou
                 docker push ahmedarafat10/jenkins_nodejs:latest
                 """
             }
-}
-        }
-
-
-                stage('CD') {
-            steps {
-
-                sh """
-                //creata a container of nodejs image
-                docker run -d -p 3000:3000 ahmedarafat10/jenkins_nodejs:latest
-
-                """
-
-                // To run Maven on a Windows agent, use
-                // bat "mvn -Dmaven.test.failure.ignore=true clean package"
-            }
-
         }
     }
+            stage('CD') {
+            steps {
+                sh """
+                //Create a Docker Container from Nodejs image
+                docker run -d -p 3000:3000 ahmedarafat10/jenkins_nodejs:latest
+                """
+            }
+        }
+    }
+
 }
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+Note: sh """Commands""" -> is used to run multipile command {in many lines use Triple quote
+while double quotes for just one command -> sh "One Command"}
 
-VVVIP: problem in above script that it runs a $ docker command which is not found
-inside jenkins containers {docker: is not found error} this logical as inside a container
-you cannot run $docker we run it in host pc not inside a container so we have to make jenkins server can run $ docker commands
 
-docker is consists of two main componants docker client & docker deamon , we want to install docker clinet cli inside jenkins server
+
+
+
+VVVIP Note: The problem in above script is that it runs a {$ docker command} which is not found
+inside Jenkins Docker Containers {Erros is -> docker: is not found error, as you are trying to
+run $docker command in side a docker container {after entering inside jenkins container ($ docker exec)} }
+you cannot run $docker command inside it as docker is not installed on it, we run it in host
+pc as its installed on it,so we have to make jenkins server can run $ docker commands as well
+
+
+-> Docker is consists of two main componants {docker client & docker deamon}
+we want to install docker clinet CLI inside jenkins docked container
 then make docker client run command send it to docker daemon which exist in host pc
-- we will create a dockerfile {which will be built to create an image of modified jenkins } , inside dockerfile. from  jenkins image we will build another modified image, and install docker clinet inside it and then add user jenkins in group docker
-as jenkins server run every thing using user called jenkins then create an image from that dockerfile {docker file is called Jenkins_Docker}
+
+-> We will create a dockerfile {which will be built to create an image of modified Jenkins}.
+-> Inside dockerfile: From Jenkins image we will build another modified image, install
+docker clinet inside it and then add user {jenkins} in group {docker} as jenkins server run every
+thing using user called jenkins then create an image from that dockerfile {docker file is called Jenkins_Docker}
 $ docker build . -f jenkins_docker -t ahmedaraft10/jenkins_docker:latest
- //creata a NEW jenkins container of modified jenkins image and mapped it to docker daemon path
+
+//Then create a NEW Jenkins Docker Container of modified Jenkins image and mapped it to docker daemon path
 $ docker run -d -p 9090:8080 -v /var/run/docker.sock:/var/run/docker.sock ahmedaraft10/jenkins_docker:latest
-then after configiring new jenkins server {that can run docker client CLI} create a new pipline then pipeline uses option {script
-from SCM} then add github repo {add dockerhub acc in credential menu if you will pull image to your dockerhub acc}
-then choose Jenkinsfile that contains groovy script to automate CI/CD {create image of nodejs from dockerfile/login to your dockerhub
- account / pull created image to your account }this is CI, while CD is to create a container that runs nodejs image and port it to host container 
-now save new pipeline and then build it then wait until build is done then in chrome enter {localhost:3030} and now nodejs app will work
+
+-> Then after configiring new Jenkins Server {that can run docker client CLI} create a new
+pipline then pipeline uses option {script from SCM} then add github repo {add Docker Hub Account
+in credential menu if you are going to pull image to your dockerhub acc}
+
+-> Then choose Jenkinsfile that contains groovy script to automate CI/CD which will execute:
+    -> Create image of nodejs from dockerfile
+    -> Login to your dockerhub account
+    -> Pull created image to your account
+    this is CI, while CD is:
+    -> Create a container that runs nodejs image and port it to host container
+
+-> Now save new pipeline configurations and then build it then wait until build is done then
+   in chrome enter {localhost:3030} and now nodejs Website will work
 
