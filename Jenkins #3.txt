@@ -196,6 +196,7 @@ this is meaning of {Host key verification strategy -> Non verifying verification
 
 To Be Continued Extensions (Easy) Part 2 --------------------------------------------------
 
+
 ----------------------------------------------------
 Integration between Jenkins and notification tools {slack}
 ----------------------------------------------------
