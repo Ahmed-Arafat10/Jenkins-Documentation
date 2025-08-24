@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+    environment {
+        BUILD_FILE_NAME = "laptop.txt"
+    }
+
+    stages {
+        
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()   // Ensures no old files exist at the start
+            }
+        }
+    
+        stage('Build') {
+            steps {
+                sh '''
+                #!/bin/bash -xe
+                mkdir -p build
+                touch build/$BUILD_FILE_NAME
+                echo mainboard >> build/$BUILD_FILE_NAME
+                cat build/$BUILD_FILE_NAME
+                '''
+            }
+        }
+        stage('Add Display') {
+            steps {
+                sh '''
+                echo display >> build/$BUILD_FILE_NAME
+                cat build/$BUILD_FILE_NAME
+                '''
+            }
+        }
+        stage('Add Keyboard') {
+            steps {
+                sh '''
+                echo keyboard >> build/$BUILD_FILE_NAME
+                cat build/$BUILD_FILE_NAME
+                '''
+            }
+        }
+        stage('Test file content') {
+            steps {
+                sh '''
+                grep "mainboard" build/$BUILD_FILE_NAME && \
+                grep "display" build/$BUILD_FILE_NAME && \
+                grep "keyboard" build/$BUILD_FILE_NAME
+                '''
+            }
+        }
+    }
+    post {
+        success {
+            archiveArtifacts artifacts: 'build/**'
+            }
+        }
+}
