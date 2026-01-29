@@ -13,6 +13,9 @@
 - Groovy pipeline script
 - Credentials Binding
 - Workspace Synchronisation
+- JUnit Test Report
+- End-to-End (E2E) Tests
+- Playwright
 
 Plugins:
   - Stage View
