@@ -2,7 +2,7 @@
 - Jenkins jobs = tasks that Jenkins executes (automation)
   - Freestyle job: simple, UI-driven.
   - Pipeline job: script-driven, flexible, allows multiple stages.
-- Docker-outside-of-Docker (DoD)
+- Docker-in-Docker (DinD)
 - SCM (Source Control Management)
 - Pipeline as Code (Jenkinsfile)
 - Jenkins Controller/Master (Server)
@@ -12,6 +12,7 @@
 - shell execution context
 - Groovy pipeline script
 - Credentials Binding
+- Workspace Synchronisation
 
 Plugins:
   - Stage View
