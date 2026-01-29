@@ -3,6 +3,7 @@
   - Freestyle job: simple, UI-driven.
   - Pipeline job: script-driven, flexible, allows multiple stages.
 - Docker-outside-of-Docker (DoD)
+- Stage View Plugin
 - SCM (Source Control Management)
 - Pipeline as Code (Jenkinsfile)
 - Jenkins Controller/Master (Server)
@@ -10,3 +11,5 @@
 - Jenkins Workspace
 - Artifact
 - shell execution context
+- Groovy pipeline script
+- Credentials Binding
