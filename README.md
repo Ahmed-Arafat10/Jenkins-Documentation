@@ -16,7 +16,9 @@
 - JUnit Test Report
 - End-to-End (E2E) Tests
 - Playwright
+- Content Security Policy (CSP) header
 
 Plugins:
   - Stage View
   - Docker Pipeline
+  - HTML Publisher
