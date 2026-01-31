@@ -17,6 +17,8 @@
 - End-to-End (E2E) Tests
 - Playwright
 - Content Security Policy (CSP) header
+- Parallel Block
+- Wrapper Stage
 
 Plugins:
   - Stage View
