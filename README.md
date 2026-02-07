@@ -19,6 +19,7 @@
 - Content Security Policy (CSP) header
 - Parallel Block
 - Wrapper Stage
+- Netlify
 
 Plugins:
   - Stage View
