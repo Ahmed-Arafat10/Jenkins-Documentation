@@ -22,6 +22,9 @@
 - Netlify
   - Site ID
   - Netlify Access Token
+- Build Triggers
+  - Build periodically
+  - Poll SCM (Source Code Management polling)
 
 Plugins:
   - Stage View
