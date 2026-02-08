@@ -25,7 +25,8 @@
 - Build Triggers
   - Build periodically
   - Poll SCM (Source Code Management polling)
-
+- jenkins input step
+- jenkins timeout step
 Plugins:
   - Stage View
   - Docker Pipeline
