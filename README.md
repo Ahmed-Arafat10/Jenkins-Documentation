@@ -20,6 +20,8 @@
 - Parallel Block
 - Wrapper Stage
 - Netlify
+  - Site ID
+  - Netlify Access Token
 
 Plugins:
   - Stage View
