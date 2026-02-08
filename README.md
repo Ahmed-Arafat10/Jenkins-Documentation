@@ -27,7 +27,10 @@
   - Poll SCM (Source Code Management polling)
 - jenkins input step
 - jenkins timeout step
-Plugins:
+- node-jq
+- Jenkins Replay Button
+
+- Plugins:
   - Stage View
   - Docker Pipeline
   - HTML Publisher
