@@ -29,8 +29,13 @@
 - jenkins timeout step
 - node-jq
 - Jenkins Replay Button
+- Jenkins Credentials
+- Jenkins script block
+- Jenkins env.EnvVarName (JOB_NAME/BUILD_ID/BUILD_NUMBER)
+- Slack With Jenkins
 
 - Plugins:
   - Stage View
   - Docker Pipeline
   - HTML Publisher
+  - Slack Notification
