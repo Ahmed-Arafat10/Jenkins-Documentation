@@ -34,6 +34,14 @@
 - Jenkins env.EnvVarName (JOB_NAME/BUILD_ID/BUILD_NUMBER)
 - Slack With Jenkins
 
+- AWS ECS
+  - Cluster
+  - Task Definition
+  - Service
+  - Revision
+
+
+
 - Plugins:
   - Stage View
   - Docker Pipeline
