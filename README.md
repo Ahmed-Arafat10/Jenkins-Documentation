@@ -36,6 +36,8 @@
 - `withCredentials`
 
 - AWS Simple Storage Simple (S3)
+  - Buckets
+  - Objects (Files)
 - AWS Identity and Access Management (IAM)
 - AWS Elastic Container Service (ECS)
   - Cluster
