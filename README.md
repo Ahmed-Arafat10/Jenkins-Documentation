@@ -33,6 +33,7 @@
 - Jenkins script block
 - Jenkins env.EnvVarName (JOB_NAME/BUILD_ID/BUILD_NUMBER)
 - Slack With Jenkins
+- `withCredentials`
 
 - AWS Simple Storage Simple (S3)
 - AWS Identity and Access Management (IAM)
