@@ -34,11 +34,14 @@
 - Jenkins env.EnvVarName (JOB_NAME/BUILD_ID/BUILD_NUMBER)
 - Slack With Jenkins
 
-- AWS ECS
+- AWS Simple Storage Simple (S3)
+- AWS Identity and Access Management (IAM)
+- AWS Elastic Container Service (ECS)
   - Cluster
   - Task Definition
   - Service
   - Revision
+- AWS Elastic Container Registry (ECR)
 
 
 
