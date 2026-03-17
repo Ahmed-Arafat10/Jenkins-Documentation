@@ -46,6 +46,7 @@
   - Revision
 - AWS Elastic Container Registry (ECR)
 - AWS CLI
+- Principle of Least Privilege
 
 
 
