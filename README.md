@@ -3,7 +3,7 @@
 </p>
 
 
-# Jenkins CI/CD Pipeline – Complete Course Documentation
+# Jenkins CI/CD Documentation
 
 This repository documents a complete hands-on journey through **Jenkins**, covering **Continuous Integration (CI)**, **Continuous Deployment (CD)**, **Docker**, and **AWS (S3, EC2, ECS)**.
 
