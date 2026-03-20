@@ -1,11 +1,13 @@
-<p align="center">
+<div align="center">
   <img src="https://www.jenkins.io/images/logos/jenkins/jenkins.svg" alt="Jenkins Logo" width="150"/>
-</p>
+
+<h1>Jenkins CI/CD Documentation</h1>
+
+</div>
 
 
-# Jenkins CI/CD Documentation
-
-This repository documents a complete hands-on journey through **Jenkins**, covering **Continuous Integration (CI)**, **Continuous Deployment (CD)**, **Docker**, and **AWS (S3, EC2, ECS)**.
+This repository documents a complete hands-on journey through **Jenkins**, covering **Continuous Integration (CI)**, *
+*Continuous Deployment (CD)**, **Docker**, and **AWS (S3, EC2, ECS)**.
 
 - [Terminologies](./Terminologies.md)
 
