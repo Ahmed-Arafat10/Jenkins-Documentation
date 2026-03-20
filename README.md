@@ -1,3 +1,8 @@
+<p align="center">
+  <img src="https://www.jenkins.io/images/logos/jenkins/jenkins.svg" alt="Jenkins Logo" width="150"/>
+</p>
+
+
 # Jenkins CI/CD Pipeline – Complete Course Documentation
 
 This repository documents a complete hands-on journey through **Jenkins**, covering **Continuous Integration (CI)**, **Continuous Deployment (CD)**, **Docker**, and **AWS (S3, EC2, ECS)**.
